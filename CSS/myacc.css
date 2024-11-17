@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+/* Reset default margin and padding */
+:root{
+    --green:#2024a5;
+    --black:#333;
+    --white:#fff;
+    --bg-color:#eee;
+    --box-shadow:0 .5rem 1rem rgba(0,0,0,.1);
+    --border:.1rem solid var(--black);
+ }
+  
+ *{
+    font-family: 'Poppins', sans-serif;
+    margin:0; padding:0;
+    box-sizing: border-box;
+    outline: none; border:none;
+    text-decoration: none;
+ }
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    line-height: 1;
+}
+
+html{
+    font-size: 62.5%;
+    overflow-x: hidden;
+ }
+
+/* Header styles */
+header {
+    background-color: #2024a5;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+footer {
+    background-color: #2024a5;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+li{
+    display: inline;
+    font-size: 1.4rem;
+    margin-right: 13px;
+ }
+
+/* Main content styles */
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+main h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* Form styles */
+form {
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1.5rem;
+}
+
+form input[type="text"],
+form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form input[type="number"] {
+    width: 20%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form select[name = "item"]{
+    width: 20%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form input[type="submit"] {
+    background-color: #2024a5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #2024a5;
+}
+
+/* Link styles */
+.updatepass-link,
+.logout-link {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.updatepass-link a,
+.logout-link a {
+    color: #2024a5;
+    text-decoration: none;
+}
+
+.updatepass-link a:hover,
+.logout-link a:hover {
+    text-decoration: underline;
+}
+
+.form .gender{
+    column-gap: 5px;
+    cursor: pointer;
+}
+
+.gender input{
+    accent-color: #2024a5;
+}
+
+.form :where(.gender input, .gender label){
+    cursor: pointer;
+}
+
+.gender label{
+    color: #707070;
+}
+
+.kk{
+    color: white;
+}
+
+h1{
+    margin-bottom: 10px;
+}
