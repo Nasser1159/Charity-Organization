@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2024 at 03:12 PM
+-- Generation Time: Nov 17, 2024 at 04:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -111,7 +111,8 @@ CREATE TABLE `donor` (
 
 INSERT INTO `donor` (`id`, `username`, `birthdate`, `email`, `password`, `phone_number`, `gender`, `donorid`) VALUES
 (1, 'Malak', '1992-08-25', 'example@abc.com', '35e9a3f0dab724451bd956db409c2c9e96f795c9', '01098765432', 1, 'c4ca4238a0b923820dcc509a6f75849b'),
-(9, 'qqq', '2002-11-11', 'examplee@abc.com', '8cb2237d0679ca88db6464eac60da96345513964', '1111111111', 0, '45c48cce2e2d7fbdea1afc51c7c6ad26');
+(9, 'qqq', '2002-11-11', 'examplee@abc.com', '8cb2237d0679ca88db6464eac60da96345513964', '1111111111', 0, '45c48cce2e2d7fbdea1afc51c7c6ad26'),
+(10, 'New1', '1998-05-17', 'hhh@yahoo.com', '8cb2237d0679ca88db6464eac60da96345513964', '01543675468', 1, 'd3d9446802a44259755d38e6d163e820');
 
 -- --------------------------------------------------------
 
@@ -134,10 +135,12 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`id`, `item_name`, `item_cost`, `amount`, `program_id`, `itemid`, `program_name`) VALUES
-(2, 'Name 2', 100, 2000, 'c81e728d9d4c2f636f067f89cc14862c', 'c81e728d9d4c2f636f067f89cc14862c', 'Name 2'),
-(3, 'Name 9', 500, 1080, 'e4da3b7fbbce2345d7772b0674a318d5', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', 'Name 5'),
-(6, 'Name 7', 20000, 170, 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '1679091c5a880faf6fb5e6087eb1b2dc', 'Name 3'),
-(7, 'Name', 5000, 1000, 'c4ca4238a0b923820dcc509a6f75849b', '8f14e45fceea167a5a36dedd4bea2543', 'Name 1');
+(2, 'Family carton', 100, 2000, 'c81e728d9d4c2f636f067f89cc14862c', 'c81e728d9d4c2f636f067f89cc14862c', 'Feed Families'),
+(3, 'Gaza carton', 500, 1080, 'e4da3b7fbbce2345d7772b0674a318d5', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', 'Help for Gaza'),
+(6, 'Medical needs', 20000, 170, 'e4da3b7fbbce2345d7772b0674a318d5', '1679091c5a880faf6fb5e6087eb1b2dc', 'Help for Gaza'),
+(7, 'Food carton', 5000, 1000, 'c4ca4238a0b923820dcc509a6f75849b', '8f14e45fceea167a5a36dedd4bea2543', 'Feed Orphans'),
+(9, 'Medical Drugs', 900, 1000, 'a87ff679a2f3e71d9181a67b7542122c', '45c48cce2e2d7fbdea1afc51c7c6ad26', 'provide Medical drugs'),
+(10, 'clothes', 800, 1222, 'eccbc87e4b5ce2fe28308fd9f2a7baf3', 'd3d9446802a44259755d38e6d163e820', 'For the newborn');
 
 -- --------------------------------------------------------
 
@@ -157,11 +160,11 @@ CREATE TABLE `program` (
 --
 
 INSERT INTO `program` (`id`, `program_name`, `description`, `programid`) VALUES
-(1, 'Name 1', 'Test 1', 'c4ca4238a0b923820dcc509a6f75849b'),
-(2, 'Name 2', 'Test 2', 'c81e728d9d4c2f636f067f89cc14862c'),
-(3, 'Name 3', 'Test 3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3'),
-(4, 'Name 4', 'Test 4', 'a87ff679a2f3e71d9181a67b7542122c'),
-(5, 'Name 5', 'Test 5', 'e4da3b7fbbce2345d7772b0674a318d5');
+(1, 'Feed Orphans', 'provide essential food assistance to orphans in need', 'c4ca4238a0b923820dcc509a6f75849b'),
+(2, 'Feed Families', 'provide essential food assistance to families in need', 'c81e728d9d4c2f636f067f89cc14862c'),
+(3, 'For the newborn', 'provide help for newborns ,such as essentials.', 'eccbc87e4b5ce2fe28308fd9f2a7baf3'),
+(4, 'provide Medical drugs', 'provide the essential drugs , such as cold medicine , vitamins ,etc..', 'a87ff679a2f3e71d9181a67b7542122c'),
+(5, 'Help for Gaza', 'provide help to those in need.', 'e4da3b7fbbce2345d7772b0674a318d5');
 
 -- --------------------------------------------------------
 
@@ -264,13 +267,13 @@ ALTER TABLE `donation_details`
 -- AUTO_INCREMENT for table `donor`
 --
 ALTER TABLE `donor`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `program`
