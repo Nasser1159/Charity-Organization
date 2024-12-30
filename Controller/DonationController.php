@@ -7,10 +7,10 @@ require_once "../Model/DecTrans.php";
 
 
 class DonationController {
-    function view_allController() {
+    public function view_allController() {
         $donationView = new DonationsView();
-        $stmt = DonationModel::view_all();
-        $donationView->ShowDonationsTable($stmt);    
+        $iterator = DonationModel::view_all();
+        $donationView->ShowDonationsTable($iterator);
     }
 
     function addController() {

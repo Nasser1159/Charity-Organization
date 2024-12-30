@@ -90,10 +90,10 @@ public static function getDonationId($donor_id, $total_cost, $donation_date) {
         return $stmt->execute(['id' => $id]);
     }
 
-    public static function view_all(){
-        
-        $stmt = Singleton::getpdo()->query("SELECT * FROM ".self::table);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public static function view_all() {
+        $stmt = Singleton::getpdo()->query("SELECT * FROM " . self::table);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return new DonationIterator($rows);
     }
 
     public static function view_all_donor($donor_id){
