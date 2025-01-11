@@ -1,60 +1,69 @@
 <?php
 require_once "..\View\CartView.php";
 require_once "..\Model\pdo.php";
+require_once "../Model/CommandManager.php";
+require_once "../Model/RemoveItemCommand.php";
+require_once "../Model/RemoveAllCommand.php";
+require_once "../Model/AddToCartCommand.php";
+
 session_start();
 
-class CartController{
+class CartController {
     public $cartView;
+    private $commandManager;
+    private $cart;
+
     function __construct() {
         $this->cartView = new CartView();
+        $this->commandManager = new CommandManager();
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+        $this->cart = &$_SESSION['cart'];
     }
 
-    public function showCartController(){
+    public function showCartController() {
         $this->cartView->ShowCart();
     }
 
-    public function addToCartController(){
-        session_start();
-        if(empty($_SESSION['cart']))
-            $_SESSION['cart']=array();
-        $_SESSION['cart'][$_POST['item']] = $_POST['quantity'];
-        /*foreach ($_SESSION['cart'] as $item => $quantity) {
-            echo "Item: $item, Quantity: $quantity <br>";
-        }*/
-        header("Location: ProgramController.php?cmd=showtouser&id=".$_GET['id']);
-        return;
+    public function addToCartController() {
+        $command = new AddToCartCommand($this->cart, $_POST['item'], $_POST['quantity']);
+        $this->commandManager->executeCommand($command);
+        header("Location: ProgramController.php?cmd=showtouser&id=" . $_GET['id']);
     }
 
-    public function removeItemController(){
+    public function removeItemController() {
         $item = $_GET['item'];
-        unset($_SESSION['cart'][$item]);
+        $command = new RemoveItemCommand($this->cart, $item);
+        $this->commandManager->executeCommand($command);
         $this->cartView->ShowCart();
     }
 
-    public function removeAllController(){
-        $_SESSION['cart'] = array();
+    public function removeAllController() {
+        $command = new RemoveAllCommand($this->cart);
+        $this->commandManager->executeCommand($command);
         header("Location: CartController.php?cmd=showcart");
     }
 
+    public function undoLastAction() {
+        $this->commandManager->undoCommand();
+        $this->cartView->ShowCart();
+    }
 }
 
 $controller = new CartController();
 $command = $_GET['cmd'];
-$cartView = new CartView();  
 
 if ($command == 'showcart') {
     $controller->showCartController();
-}
-
-else if ($command == 'addToCart' ) {
+} elseif ($command == 'addToCart') {
     $controller->addToCartController();
-}
-
-else if ($command == 'removeitem') {
+} elseif ($command == 'removeitem') {
     $controller->removeItemController();
-}
-
-else if ($command == 'removeall')
+} elseif ($command == 'removeall') {
     $controller->removeAllController();
+} elseif ($command == 'undo') {
+    $controller->undoLastAction();
+}
 
 $controller->cartView->PrintFooter();

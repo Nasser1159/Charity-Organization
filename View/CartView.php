@@ -85,6 +85,8 @@ class CartView extends ViewAbst {
             </form>
             ');
 
-        }    
+        }
+        
+        echo('<a href="CartController.php?cmd=undo" class="btn">Undo Last Action</a>');    
     }
 }
