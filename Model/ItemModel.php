@@ -4,7 +4,7 @@ require_once "ModifiableAbstModel.php";
 require_once "Iobserver.php";
 
 
-class ItemModel extends ModifiableAbstModel implements IObserver{
+class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
     const table = "item";
     private $program_id;
     private $item_name;
