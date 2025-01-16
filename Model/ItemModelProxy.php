@@ -33,18 +33,21 @@ class ItemModelProxy implements IItemModel {
         return $this->cache['read'];
     }
 
-    public function remove($id) {
-        $this->invalidateCache();
+    public static function remove($id) {
+        self::invalidateCache();        
         return ItemModel::remove($id);
     }
+    
 
-    public function view_all() {
-        if (isset($this->cache['view_all'])) {
-            return $this->cache['view_all'];
-        }
-        $this->cache['view_all'] = ItemModel::view_all();
-        return $this->cache['view_all'];
+    public static function view_all() {
+        static $cache = [];
+        if (isset($cache['view_all'])) {
+            return $cache['view_all'];
+        }    
+        $cache['view_all'] = ItemModel::view_all();
+        return $cache['view_all'];
     }
+    
 
     private function invalidateCache() {
         $this->cache = [];
