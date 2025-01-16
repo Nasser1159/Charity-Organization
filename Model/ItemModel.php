@@ -2,6 +2,7 @@
 require_once "pdo.php";
 require_once "ModifiableAbstModel.php";
 require_once "Iobserver.php";
+require_once "IItemModel.php";
 
 
 class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
