@@ -40,7 +40,6 @@ class ItemModelProxy implements IItemModel {
     
 
     public static function view_all() {
-        static $cache = [];
         if (isset($cache['view_all'])) {
             return $cache['view_all'];
         }    
