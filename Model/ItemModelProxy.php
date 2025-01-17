@@ -3,11 +3,11 @@ require_once "IItemModel.php";
 
 class ItemModelProxy implements IItemModel {
     private ?ItemModel $realItemModel = null;
-    private array $cache = [];
+    private static array $cache = [];
 
-    public function __construct(private int $id = 0) {}
+    public function __construct(private string $id = '') {}
 
-    private function getRealItemModel(): ItemModel {
+    public function getRealItemModel(): ItemModel {
         if ($this->realItemModel === null) {
             $this->realItemModel = new ItemModel();
             $this->realItemModel->setId($this->id);
@@ -48,8 +48,9 @@ class ItemModelProxy implements IItemModel {
     }
     
 
-    private function invalidateCache() {
-        $this->cache = [];
+    private static function invalidateCache() {
+        self::$cache = [];
     }
+    
 }
 ?>
