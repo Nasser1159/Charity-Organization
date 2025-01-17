@@ -13,7 +13,7 @@ class DonationDetailsController {
             $x = new DonationDetailsModel($donationkey,$item,$quantity,$itemModel->getCost());
             $x->add();
         }
-        $_SESSION['cart'] = array(); //to empty the cart after the donation
+        $_SESSION['cart'] = array();
         $donationDetailsView = new DonationDetailsView();
         $donationmodel = new DonationModel();
         $donationmodel->getById($donationkey);
@@ -28,24 +28,10 @@ class DonationDetailsController {
     }
 }
 
-/* $controller = new DonationDetailsController();
-$command = $_GET['cmd'];
-$donationkey = $_GET['id'];
-
-
-if ($command == 'viewDetails') {
-    $controller->viewController($donationkey, );
-}
-if($command == 'add'){
-    $controller->addController($donationkey);
-} */
-
 $controller = new DonationDetailsController();
 
-// Check if 'cmd' key exists in $_GET
 $command = isset($_GET['cmd']) ? $_GET['cmd'] : null;
 
-// Check if 'id' key exists in $_GET
 $donationkey = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($command !== null) {

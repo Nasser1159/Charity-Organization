@@ -18,9 +18,7 @@ class DonationDetailsModel extends ModifiableAbstModel {
     }
 
     public function add() {
-        
-        
-        // First, insert the supplier record
+                
         $sql = "INSERT INTO ".self::table." (donation_id, item_id, Qty, price) 
         VALUES (:donation, :item, :qty, :price)";
         $stmt = Singleton::getpdo()->prepare($sql); 
