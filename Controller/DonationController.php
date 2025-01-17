@@ -1,5 +1,5 @@
 <?php
-require_once "../Model/DonationFacade.php"; // Add this line
+require_once "../Model/DonationFacade.php";
 require_once "../View/DonationView.php";
 
 class DonationController {

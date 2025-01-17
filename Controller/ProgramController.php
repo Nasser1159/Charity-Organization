@@ -19,8 +19,6 @@ class ProgramController {
             }catch(PDOException $e){
                 if ($e->getCode() == '23000') {
                     $this->ProgView->ChangeProgram(0);
-                } else {
-                    echo "Error: " . $e->getMessage();
                 }
             }
         }
@@ -35,11 +33,6 @@ class ProgramController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $ProgModel = new ProgramModel(trim($_POST['name']), trim($_POST['address']), $_GET['id']);
             $ProgModel->setId($_GET['id']);
-            /*foreach ($ProgModel->observers as $observer) {
-                if ($observer instanceof ItemModel) {
-                    echo "Item ID: " . $observer->getItemName() . "\n";
-                }
-            }*/
             $this->ProgView->ChangeProgram($ProgModel->edit());
         }
         else {

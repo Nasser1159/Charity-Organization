@@ -27,8 +27,6 @@ class ItemController {
         } catch (PDOException $e) {
             if ($e->getCode() == '23000') {
                 $this->itemView->ChangeItem(0);
-            } else {
-                echo "Error: " . $e->getMessage();
             }
         }
     }
@@ -67,8 +65,6 @@ class ItemController {
                 }catch(PDOException $e){
                     if ($e->getCode() == '23000') {
                         $this->itemView->ChangeItem(0);
-                    } else {
-                        echo "Error: " . $e->getMessage();
                     }
                 }
 

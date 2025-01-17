@@ -41,6 +41,4 @@ if ($command !== null) {
     if ($command == 'add' && $donationkey !== null) {
         $controller->addController($donationkey);
     }
-} else {
-    echo "Invalid command or missing parameters.";
 }

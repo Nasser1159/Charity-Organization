@@ -54,9 +54,7 @@ class PaymentController {
                     
                     $this->payview->PaymentResult($result, $paymentMethod, $amount);
                 }
-            } catch (Exception $e) {
-                
-                echo "Error: " . $e->getMessage();
+            } catch (Exception $e) {                
             }
         }
     }
