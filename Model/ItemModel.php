@@ -28,8 +28,7 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
         }
     }
 
-    public function add() {
-
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (program_id, item_name, item_cost, amount, program_name) 
         VALUES (:program_id, :item_name, :item_cost, :amount, :program_name)";
         $stmt = Singleton::getpdo()->prepare($sql);
@@ -40,10 +39,9 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
         ':program_name' => $this->program_name,));
 
         $this->ISubject->addObserver($this);
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
-        $md5Hash = md5($lastInsertedId);
-        
+    public function updateHash($lastInsertedId, $md5Hash){
         $sql = "UPDATE ".self::table." SET itemid = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(

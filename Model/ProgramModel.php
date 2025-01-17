@@ -25,20 +25,17 @@ class ProgramModel extends ModifiableAbstModel implements ISubject{
             }
         
     }
-
-    public function add() {
-
+    
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (program_name, description) 
         VALUES (:program, :description)";
         $stmt = Singleton::getpdo()->prepare($sql);
         $stmt->execute(array(':program' => $this->program_name,
         ':description' => $this->description));
-        
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
+    public function updateHash($lastInsertedId, $md5Hash){
         $this->id = md5($lastInsertedId);
-        $md5Hash = md5($lastInsertedId);
-        
         $sql = "UPDATE ".self::table." SET programid = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(

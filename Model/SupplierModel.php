@@ -12,9 +12,9 @@ class SupplierModel extends ModifiableAbstModel {
         $this->name = $name;
         $this->address = $address;
     }
-
-    public function add() {
         
+
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (name, address) 
                 VALUES (:name, :address)";
         $stmt = Singleton::getpdo()->prepare($sql);
@@ -22,11 +22,9 @@ class SupplierModel extends ModifiableAbstModel {
             ':name' => $this->name,
             ':address' => $this->address
         ));
-        
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
-        $md5Hash = md5($lastInsertedId);
-        
+    public function updateHash($lastInsertedId, $md5Hash){
         $sql = "UPDATE ".self::table." SET supplierid = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(
@@ -34,7 +32,6 @@ class SupplierModel extends ModifiableAbstModel {
             ':lastInsertedId' => $lastInsertedId
         ));
     }
-    
 
     public function read() {
         $sql = "SELECT * FROM ".self::table." WHERE supplierid = :id";

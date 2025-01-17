@@ -17,8 +17,7 @@ class DonationDetailsModel extends ModifiableAbstModel {
         $this->price = $price;
     }
 
-    public function add() {
-                
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (donation_id, item_id, Qty, price) 
         VALUES (:donation, :item, :qty, :price)";
         $stmt = Singleton::getpdo()->prepare($sql); 
@@ -27,18 +26,15 @@ class DonationDetailsModel extends ModifiableAbstModel {
             ':item' => $this->item_id,
             ':qty' => $this->Qty,
             ':price' => $this->price));
-       
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
-        $md5Hash = md5($lastInsertedId);
-        
+    public function updateHash($lastInsertedId, $md5Hash){
         $sql = "UPDATE ".self::table." SET dd_id = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(
             ':md5Hash' => $md5Hash,
             ':lastInsertedId' => $lastInsertedId
         ));
-       
     }
 
     public function read() {

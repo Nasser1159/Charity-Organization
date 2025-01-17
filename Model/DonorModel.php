@@ -22,8 +22,7 @@ class DonorModel extends ModifiableAbstModel implements IVerifiable {
         $this->gender = $gender;
     }
 
-    public function add() {
-
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (username, birthdate, email, password, phone_number, gender) 
         VALUES (:username, :birthdate, :email, :password, :phonenumber, :gender)";
         $stmt = Singleton::getpdo()->prepare($sql);
@@ -33,11 +32,9 @@ class DonorModel extends ModifiableAbstModel implements IVerifiable {
         ':password' => $this->password,
         ':phonenumber' => $this->phone_number,
         ':gender' => $this->gender));
-        
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
-        $md5Hash = md5($lastInsertedId);
-        
+    public function updateHash($lastInsertedId, $md5Hash){
         $sql = "UPDATE ".self::table." SET donorid = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(

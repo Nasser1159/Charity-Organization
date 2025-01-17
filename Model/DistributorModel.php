@@ -13,8 +13,7 @@ class DistributorModel extends ModifiableAbstModel {
         $this->address = $address;
     }
 
-    public function add() {
-        
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (name, address) 
                 VALUES (:name, :address)";
         $stmt = Singleton::getpdo()->prepare($sql);
@@ -22,11 +21,9 @@ class DistributorModel extends ModifiableAbstModel {
             ':name' => $this->name,
             ':address' => $this->address
         ));
-        
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
-        $md5Hash = md5($lastInsertedId);
-        
+    public function updateHash($lastInsertedId, $md5Hash){
         $sql = "UPDATE ".self::table." SET distributorid = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(

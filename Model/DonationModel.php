@@ -17,11 +17,7 @@ class DonationModel extends ModifiableAbstModel {
         $this->donation_date = $donation_date;
     }
 
-    
-
-    public function add() {
-        
-        
+    public function insertData() {
         $sql = "INSERT INTO ".self::table." (donor_id, total_cost, donation_date)
                 VALUES (:donor, :cost, :date)";
         $stmt = Singleton::getpdo()->prepare($sql);
@@ -30,12 +26,10 @@ class DonationModel extends ModifiableAbstModel {
             'cost' => $this->total_cost,
             'date' => $this->donation_date
         ));
-       
-        $lastInsertedId = Singleton::getpdo()->lastInsertId();
+    }
 
+    public function updateHash($lastInsertedId, $md5Hash){
         $this->id = md5($lastInsertedId);
-        $md5Hash = md5($lastInsertedId);
-        
         $sql = "UPDATE ".self::table." SET donationid = :md5Hash WHERE id = :lastInsertedId";
         $stmt = Singleton::getpdo()->prepare($sql);
        return  $stmt->execute(array(
@@ -155,11 +149,6 @@ class DonationModel extends ModifiableAbstModel {
         $this->receipt = $r;
     }
 
-    
-    public function sendConfirmationEmail(): bool {
-        
-    }
-
     public function sendReceiptToDonor(Receipt $r): void {
         
     }
@@ -170,10 +159,6 @@ class DonationModel extends ModifiableAbstModel {
 
     public function exportToFormat(Receipt $r): void {
         
-    }
-
-    public function getReceiptID(Receipt $r): string {
-        return $r->receiptID;
     }
 
 
