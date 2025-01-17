@@ -1,16 +1,18 @@
 <?php
+// File: View/DonorView.php
+
 require_once "ViewAbst.php";
 require_once "../Model/DonorModel.php";
-require_once "../Model/DonationModel.php";
-require_once "../Model/ProgramModel.php";
-require_once "../Model/ItemModel.php";
+require_once "../Model/User.php";
+require_once "../Model/UserDonationState.php";
+require_once "../Model/DonationStates.php";
 require_once "../Model/GenderEnum.php";
-
-class DonorView extends ViewAbst{
-    function signup($error = null){
+require_once "../Model/ProgramModel.php";
+require_once "../Model/DonationModel.php";
+class DonorView extends ViewAbst {
+    function signup($error = null) {
         echo('<!DOCTYPE html>
         <html>
-        
             <head>
                 <meta charset="UTF-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,38 +20,32 @@ class DonorView extends ViewAbst{
                 <link rel="stylesheet" href="../CSS/signup.css">
                 <title>Sign Up</title>
             </head>
-        
             <body>
                 <section class="container">
                     <header><h1>Registration Form</h1></header>
                     <form action="../Controller/DonorController.php?cmd=signup" method="post" class="form">
-                        <div class = "input-box">
+                        <div class="input-box">
                             <label>Username:</label>
                             <input type="text" id="username" name="username" placeholder="Enter your username" required>
                         </div>
-        
-                        <div class = "input-box">
+                        <div class="input-box">
                             <label>Password:</label>
                             <input type="password" id="password" name="password" placeholder="Enter your password" required>
                         </div>
-        
-                        <div class = "input-box">
+                        <div class="input-box">
                             <label>Email Address:</label>
                             <input type="email" id="email" name="email" placeholder="Enter your email address" required>
                         </div>   
-        
                         <div class="column">
-                            <div class = "input-box">
+                            <div class="input-box">
                                 <label>Phone Number:</label>
                                 <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
                             </div> 
-        
-                            <div class = "input-box">
+                            <div class="input-box">
                                 <label>Birth Date:</label>
                                 <input type="date" id="birthdate" name="birthdate" required>
                             </div> 
                         </div>
-        
                         <div class="gender-box">
                             <h3>Gender</h3>
                             <div class="gender-option">
@@ -63,22 +59,19 @@ class DonorView extends ViewAbst{
                                 </div> 
                             </div>    
                         </div>
-                        
                         <button>Submit</button>
                         <p class="login-link">Already have an account? <a href="../Controller/HomeController.php?cmd=login">Login</a></p>');
-                        if($error !== null){
-                           echo('<p style="color: red;">' . $error . '</p>');
+                        if ($error !== null) {
+                            echo('<p style="color: red;">' . $error . '</p>');
                         }
-
-                        echo ('
+                        echo('
                     </form>
                 </section>
             </body>
-        </html>
-        ');
+        </html>');
     }
+
     function ShowDonorsTable($rows) {
-        
         echo('<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -94,13 +87,12 @@ class DonorView extends ViewAbst{
                 <h1>Donor Database</h1>
                 <nav>
                     <ul>
-                        <li><a class="kk" href="../View/dashboard.php">Dashboard</a></li>
-                        <li><a class="kk" href="../Controller/DonationController.php?cmd=viewAll">Back</a></li>
+                        <li><a href="../View/dashboard.php">Dashboard</a></li>
+                        <li><a href="../Controller/DonationController.php?cmd=viewAll">Back</a></li>
                     </ul>
                 </nav>
         </header>
         <div class="container">
-        
            <div class="object-display">
                 <table class="object-display-table">
                     <thead>
@@ -112,10 +104,9 @@ class DonorView extends ViewAbst{
                         <th>Phone Number</th>
                         <th>Gender</th>
                     </tr>
-                    </thead>
-        ');
+                    </thead>');
 
-        foreach($rows as $row)
+        foreach ($rows as $row) {
             echo('
                 <tr>
                     <td>'.$row['id'].'</td>
@@ -123,33 +114,41 @@ class DonorView extends ViewAbst{
                     <td>'.$row['birthdate'].'</td>
                     <td>'.$row['email'].'</td>
                     <td>'.$row['phone_number'].'</td>
-                    <td>'.( ($row['gender'] == GenderEnum::Male->value)?"Male":"Female" ).'</td>
+                    <td>'.( ($row['gender'] == GenderEnum::Male->value) ? "Male" : "Female" ).'</td>
                 </tr>
             ');
+        }
     }
 
     function ShowDonorDetails($donor) {
-        echo( '<html lang="en"><head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" href="..\CSS\myacc.css">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-                <title>Food Bank</title>
-            </head>
-            <body>
-                <header>
-                    <h1>Food Bank</h1>
-                    <nav>
-                        <ul>
-                            <li><a class="kk" href="..\Controller\HomeController.php">Home</a></li>
-                            <li><a href="..\Controller\CartController.php?cmd=showcart" class="kk">Cart</a></li>                           
-                        </ul>
-                    </nav>
-                </header>
-                
-                <main>
-                    <h2>My Account</h2>
-                    <form action="../Controller/DonorController.php?cmd=myacc" method="post">
+        // Create a User object with the appropriate state
+        $donorModel = new DonorModel();
+        $donationState = $donorModel->getDonationState($donor->getId());
+        $user = new User($donor->getId(), $donor->getUserName(), $donationState);
+    
+        echo('
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="..\CSS\myacc.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+            <title>Food Bank</title>
+        </head>
+        <body>
+            <header>
+                <h1>Food Bank</h1>
+                <nav>
+                    <ul>
+                        <li><a href="..\Controller\HomeController.php">Home</a></li>
+                        <a href="..\Controller\CartController.php?cmd=showcart" class="cart"><i class="fa-solid fa-cart-shopping"></i></a>                           
+                    </ul>
+                </nav>
+            </header>
+            
+            <main>
+                <h2>My Account</h2>
+                <form action="../Controller/DonorController.php?cmd=myacc" method="post">
                     <label>Username: </label>
                     <input type="text" id="username" name="username" value="'.$donor->getUserName().'" readonly>
                     <br><br>
@@ -169,15 +168,14 @@ class DonorView extends ViewAbst{
                     <div class="gender-box">
                         <div class="gender-option">
                             <div class="gender">
-                            
                                 <label for="check" class="box">Male</label>
                                 <input type="radio" id="male" name="gender" value="'.GenderEnum::Male->value.'" required ');
                                 if ($donor->getGender() == GenderEnum::Male->value)
                                     echo(' checked');
                                 echo('/></div> 
-                                        <div class="gender">
-                                            <br/><br/><label for="check" class="box">Female</label>
-                                            <input type="radio" id="female" name="gender" value="'.GenderEnum::Female->value.'" required ');
+                            <div class="gender">
+                                <br/><br/><label for="check" class="box">Female</label>
+                                <input type="radio" id="female" name="gender" value="'.GenderEnum::Female->value.'" required ');
                                 if ($donor->getGender() == GenderEnum::Female->value)
                                     echo(' checked');
                                 echo('/></div> 
@@ -188,16 +186,24 @@ class DonorView extends ViewAbst{
                     <input type="submit" value="Update">
                     <br><br>
                 </form>
-                <p class="updatepass-link"><a href="..\Controller\DonorController.php?id='.md5( $_SESSION['user_id']).'&cmd=viewdonations">My Donations</a></p>
+    
+                <!-- Display Donation Status -->
+                <div class="donation-status">
+                    <h3>Donation Status:</h3>');
+                    $user->displayDonationStatus(); // Display the donation status based on the state
+        echo('
+                </div>
+    
+                <p class="updatepass-link"><a href="..\Controller\DonorController.php?id='.md5($_SESSION['user_id']).'&cmd=viewdonations">My Donations</a></p>
                 <p class="logout-link"><a href="..\Controller\HomeController.php?cmd=logout">Logout</a></p>
-                </main>
-                <footer>
-                    <p>© 2024 Food Bank</p>
-                </footer>
-            </body>
-        </html>'
-    );
+            </main>
+            <footer>
+                <p>© 2024 Food Bank</p>
+            </footer>
+        </body>
+        </html>');
     }
+
     function ShowMyDD($rows, $obj) {
         $programModel = new ProgramModel();
         $itemModel = new ItemModel();  
@@ -217,15 +223,14 @@ class DonorView extends ViewAbst{
                 <h1>Donation Database</h1>
                 <nav>
                     <ul>
-                        <li><a class="kk" href="..\Controller\HomeController.php">Home</a></li>
-                        <li><a class="kk" href="..\Controller\DonorController.php?id='.md5( $_SESSION['user_id']).'&cmd=myacc">My Account</a></li>
-                        <li><a class="kk" href="..\Controller\HomeController.php?cmd=logout">Logout</a></li>
-                        <li><a class="kk" href="..\Controller\CartController.php?cmd=showcart">Cart</a></li>
+                        <li><a href="..\Controller\HomeController.php">Home</a></li>
+                        <li><a href="..\Controller\DonorController.php?id='.md5($_SESSION['user_id']).'&cmd=myacc">My Account</a></li>
+                        <li><a href="..\Controller\HomeController.php?cmd=logout">Logout</a></li>
+                        <a href="..\Controller\CartController.php?cmd=showcart" class="cart"><i class="fa-solid fa-cart-shopping"></i></a>
                     </ul>
                 </nav>
         </header>
         <div class="container">
-        
            <div class="object-display">
                 <table class="object-display-table">
                     <thead>
@@ -238,10 +243,9 @@ class DonorView extends ViewAbst{
                         <th>Price</th>
                         <th>Total</th>
                     </tr>
-                    </thead>
-        ');
+                    </thead>');
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $itemModel->getById($row['item_id']);
             $programModel->getById($itemModel->getProgramID());
             echo('
@@ -257,7 +261,4 @@ class DonorView extends ViewAbst{
         }
     }
 }
-
-    
-
-   
+?>

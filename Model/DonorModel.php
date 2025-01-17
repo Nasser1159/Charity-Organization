@@ -176,4 +176,25 @@ class DonorModel extends ModifiableAbstModel implements IVerifiable {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['id'];
     }
+    public function markAsDonated($donorId) {
+        $sql = "UPDATE donor SET has_donated = 1 WHERE donorid = :donorid";
+        $stmt = Singleton::getpdo()->prepare($sql);
+        return $stmt->execute(['donorid' => $donorId]);
+    }
+    public function hasDonated($donorId) {
+        $sql = "SELECT COUNT(*) AS donation_count FROM donations WHERE donor_id = :donor_id";
+        $stmt = Singleton::getpdo()->prepare($sql);
+        $stmt->execute(['donor_id' => $donorId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['donation_count'] > 0;
+    }
+    public function getDonationState($donorId) {
+        if ($this->hasDonated($donorId)) {
+            return new DonatedState();
+        } else {
+            return new NotDonatedYetState();
+        }
+    }
+
 }
