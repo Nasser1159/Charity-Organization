@@ -1,37 +1,49 @@
 <?php
-require_once "../Model/DonationDetailsModel.php";
-require_once "../Model/DonationModel.php";
-require_once "../Model/ItemModel.php";
+require_once "../Model/DonationAdapter.php";
 require_once "../View/DonationDetailsView.php";
 
 class DonationDetailsController {
-    function addController($donationkey) {
+    private $donationAdapter;
+
+    public function __construct() {
+        $this->donationAdapter = new DonationAdapter();
+    }
+
+    public function addController($donationkey) {
         session_start();
+
+        $details = [];
         foreach ($_SESSION['cart'] as $item => $quantity) {
             $itemModel = new ItemModel();
             $itemModel->getById($item);
-            $x = new DonationDetailsModel($donationkey,$item,$quantity,$itemModel->getCost());
-            $x->add();
+            $details[] = [
+                'item_id' => $item,
+                'Qty' => $quantity,
+                'price' => $itemModel->getCost()
+            ];
         }
-        $_SESSION['cart'] = array();
+
+        $_SESSION['cart'] = [];
+
+        $this->donationAdapter->addDonationDetails($donationkey, $details);
+
+        $donationDetails = $this->donationAdapter->getDonationDetails($donationkey);
+        $total = $this->donationAdapter->getTotalDonationCost($donationkey);
+
         $donationDetailsView = new DonationDetailsView();
-        $donationmodel = new DonationModel();
-        $donationmodel->getById($donationkey);
-        $total = $donationmodel->getTotalCost();
-        $donationDetailsView->ShowReciept($donationkey,DonationDetailsModel::view_all_id($donationkey),$total);
+        $donationDetailsView->ShowReciept($donationkey, $donationDetails, $total);
     }
 
-    function viewController($donationkey) {
+    public function viewController($donationkey) {
+        $donationDetails = $this->donationAdapter->getDonationDetails($donationkey);
+
         $donationDetailsView = new DonationDetailsView();
-        $stmt = DonationDetailsModel::view_all_id($donationkey);
-        $donationDetailsView->ShowDonationDetailsTable($stmt);    
+        $donationDetailsView->ShowDonationDetailsTable($donationDetails);
     }
 }
 
 $controller = new DonationDetailsController();
-
 $command = isset($_GET['cmd']) ? $_GET['cmd'] : null;
-
 $donationkey = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($command !== null) {
@@ -41,4 +53,6 @@ if ($command !== null) {
     if ($command == 'add' && $donationkey !== null) {
         $controller->addController($donationkey);
     }
+} else {
+    echo "Invalid command or missing parameters.";
 }

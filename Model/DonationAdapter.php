@@ -38,6 +38,7 @@ class DonationAdapter implements DonationAdapterInterface {
         foreach ($details as $detail) {
             $formattedDetails[] = [
                 'item_id' => $detail['item_id'],
+                'donation_id' => $detail['id'],
                 'quantity' => $detail['Qty'],
                 'price' => $detail['price'],
                 'total' => $detail['Qty'] * $detail['price'],

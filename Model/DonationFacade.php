@@ -1,5 +1,3 @@
-DonationFacade
-
 <?php
 require_once "DonationAdapter.php";
 require_once "DonationModel.php";
