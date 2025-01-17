@@ -1,13 +1,17 @@
+DonationFacade
+
 <?php
-require_once "IDonationAdapter.php";
+require_once "DonationAdapter.php";
 require_once "DonationModel.php";
 require_once "DonationDetailsModel.php";
 
-class DonationAdapter implements DonationAdapterInterface {
+class DonationFacade {
+    private $donationAdapter;
     private $donationModel;
     private $detailsModel;
 
     public function __construct() {
+        $this->donationAdapter = new DonationAdapter();
         $this->donationModel = new DonationModel();
         $this->detailsModel = new DonationDetailsModel();
     }
@@ -29,6 +33,12 @@ class DonationAdapter implements DonationAdapterInterface {
             );
             $this->detailsModel->add();
         }
+
+        return $donation_id;
+    }
+
+    public function getTotalDonationCost($donation_id) {
+        return $this->donationAdapter->getTotalDonationCost($donation_id);
     }
 
     public function getDonationDetails($donation_id) {
@@ -37,38 +47,18 @@ class DonationAdapter implements DonationAdapterInterface {
     
         foreach ($details as $detail) {
             $formattedDetails[] = [
-                'item_id' => $detail['item_id'],
-                'quantity' => $detail['Qty'],
-                'price' => $detail['price'],
-                'total' => $detail['Qty'] * $detail['price'],
+                'id' => $detail['id'] ?? 'N/A',
+                'item_id' => $detail['item_id'] ?? 'N/A',
+                'Qty' => $detail['Qty'] ?? 0,
+                'price' => $detail['price'] ?? 0,
             ];
         }
     
         return $formattedDetails;
     }
 
-    public function addDonationDetails($donation_id, $details) {
-        foreach ($details as $detail) {
-            $this->detailsModel = new DonationDetailsModel(
-                $donation_id,
-                $detail['item_id'],
-                $detail['Qty'],
-                $detail['price']
-            );
-            $this->detailsModel->add();
-        }
-    }
-
-    public function getTotalDonationCost($donation_id) {
-        $this->donationModel->getById($donation_id);
-        return $this->donationModel->getTotalCost();
-    }
-
-    public function view_all() {
-        return DonationModel::view_all();
+    public function getAllDonations() {
+        return $this->donationAdapter->view_all();
     }
 }
-
-
-
 ?>

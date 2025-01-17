@@ -1,30 +1,38 @@
 <?php
-require_once "../Model/DonationAdapter.php";
+require_once "../Model/DonationFacade.php"; // Add this line
 require_once "../View/DonationView.php";
 
 class DonationController {
+    private $donationFacade;
+
+    public function __construct() {
+        $this->donationFacade = new DonationFacade();
+    }
+
     public function view_allController() {
+        $donationIterator = $this->donationFacade->getAllDonations();
+
         $donationView = new DonationsView();
-        $donationAdapter = new DonationAdapter();
-        $iterator = $donationAdapter->view_all();
-        $donationView->ShowDonationsTable($iterator);
+        $donationView->ShowDonationsTable($donationIterator);
     }
 
     public function addController() {
         session_start();
         $cost = $_POST['cost'];
         $details = $_POST['details'];
-        
-        $donationAdapter = new DonationAdapter();
-        
-        $donationAdapter->addDonation(md5($_SESSION['user_id']), $cost, date('y-m-d'), $details);
-        
-        $donation_id = DonationModel::getDonationId(md5($_SESSION['user_id']), $cost, date('y-m-d'));
-        
+
+        $donation_id = $this->donationFacade->addDonation(
+            md5($_SESSION['user_id']),
+            $cost,
+            date('y-m-d'),
+            $details
+        );
+
         header("Location: DonationDetailsController.php?cmd=add&id=" . $donation_id);
         return;
     }
 }
+
 
 
 $dController = new DonationController();
@@ -36,3 +44,6 @@ if ($command == 'viewAll') {
 if ($command == 'add') {
     $dController->addController();
 }
+
+
+?>
