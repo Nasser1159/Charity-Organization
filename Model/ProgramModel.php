@@ -52,10 +52,16 @@ class ProgramModel extends ModifiableAbstModel implements ISubject{
         $stmt = Singleton::getpdo()->prepare($sql);
         $stmt->execute(['id' => $this->id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row === false) {
+            throw new Exception("No program found with the given ID.");
+        }
+    
         $this->program_name = $row['program_name'];
         $this->description = $row['description'];
         return 1;
     }
+    
 
     public function edit() {
 
@@ -89,13 +95,21 @@ class ProgramModel extends ModifiableAbstModel implements ISubject{
     public function getProgramDescription(){
         return $this->description;
     }
+
+    
     public static function getByHash($hash) {
-        $sql = "SELECT id FROM ".self::table." WHERE programid = :id";
+        $sql = "SELECT id FROM " . self::table . " WHERE programid = :id";
         $stmt = Singleton::getpdo()->prepare($sql);
         $stmt->execute(['id' => $hash]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if ($row === false) {
+            throw new Exception("No program found with the given hash.");
+        }
+    
         return $row['id'];
     }
+    
 
     public function addObserver(IObserver $Iobserver){
         $this->observers[] = $Iobserver;
