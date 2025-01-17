@@ -51,6 +51,8 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
             ':lastInsertedId' => $lastInsertedId
         ));
     }
+
+    
     public function read() {
 
         $sql = "SELECT * FROM " . self::table . " WHERE itemid = :id";
@@ -67,12 +69,11 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
     }
 
     public function edit() {
-
         $sql = "UPDATE " . self::table . " SET program_id = :program_id, item_name = :Iname, item_cost = :cost,
         amount = :amount, program_name = :program_name  WHERE itemid = :id";
         $stmt = Singleton::getpdo()->prepare($sql);
         return $stmt->execute([
-            'id' => $this->id,
+            'id' => $this->id, 
             'program_id' => $this->program_id,
             'Iname' => $this->item_name,
             'cost' => $this->item_cost,
@@ -80,6 +81,7 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
             'program_name' => $this->program_name
         ]);
     }
+    
 
    public static function remove($id) {
         $sql = "DELETE FROM " . self::table . " WHERE itemid = :id";
@@ -118,6 +120,26 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
 
     public function getProgramName(){
         return $this->program_name;
+    }
+
+    public function setProgramID($program_id) {
+        $this->program_id = $program_id;
+    }
+
+    public function setItemName($item_name) {
+        $this->item_name = $item_name;
+    }
+
+    public function setCost($item_cost) {
+        $this->item_cost = $item_cost;
+    }
+
+    public function setAmount($amount) {
+        $this->amount = $amount;
+    }
+
+    public function setProgramName($program_name) {
+        $this->program_name = $program_name;
     }
     
     public static function getByHash($hash) {
