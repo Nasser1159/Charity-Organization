@@ -47,6 +47,23 @@ class DonationAdapter implements DonationAdapterInterface {
         return $formattedDetails;
     }
 
+    public function addDonationDetails($donation_id, $details) {
+        foreach ($details as $detail) {
+            $this->detailsModel = new DonationDetailsModel(
+                $donation_id,
+                $detail['item_id'],
+                $detail['Qty'],
+                $detail['price']
+            );
+            $this->detailsModel->add();
+        }
+    }
+
+    public function getTotalDonationCost($donation_id) {
+        $this->donationModel->getById($donation_id);
+        return $this->donationModel->getTotalCost();
+    }
+
     public function view_all() {
         return DonationModel::view_all();
     }
