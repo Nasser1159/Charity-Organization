@@ -9,8 +9,6 @@ class PaymentFactory {
                 return new FawryPay();
             case 'Visa':
                 return new VisaPay();
-            default:
-                throw new Exception("Invalid payment method type.");
         }
     }
 }
