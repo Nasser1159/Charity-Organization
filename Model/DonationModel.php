@@ -44,20 +44,22 @@ class DonationModel extends ModifiableAbstModel {
         ));
     }
 
-public static function getDonationId($donor_id, $total_cost, $donation_date) {
+    public static function getDonationId($donor_id, $total_cost, $donation_date) {
+        $sql = "SELECT donationid FROM " . self::table . " WHERE donor_id = :donor_id AND total_cost = :total_cost AND donation_date = :donation_date";
+        $stmt = Singleton::getpdo()->prepare($sql);
+        $stmt->execute([
+            'donor_id' => $donor_id,
+            'total_cost' => $total_cost,
+            'donation_date' => $donation_date
+        ]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
+        if ($row === false) {
+            return null; 
+        }
+        return $row['donationid'];
+    }
     
-    $sql = "SELECT donationid FROM ".self::table." WHERE donor_id = :donor_id AND total_cost = :total_cost AND donation_date = :donation_date";
-    $stmt = Singleton::getpdo()->prepare($sql);
-    $stmt->execute([
-        'donor_id' => $donor_id,
-        'total_cost' => $total_cost,
-        'donation_date' => $donation_date
-    ]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    return $row['donationid'];
-}
     
 
     public function read() {
@@ -145,7 +147,6 @@ public static function getDonationId($donor_id, $total_cost, $donation_date) {
         $this->donation_date = $date;
     }
     public static function getLastInsertedId() {
-         // Assuming Singleton::getpdo() is your database connection object
         return Singleton::getpdo()->lastInsertId();
     }
 
@@ -175,6 +176,7 @@ public static function getDonationId($donor_id, $total_cost, $donation_date) {
         return $r->receiptID;
     }
 
+
     public static function getByHash($hash) {
         $sql = "SELECT id FROM ".self::table." WHERE donationid = :id";
         $stmt = Singleton::getpdo()->prepare($sql);
@@ -182,4 +184,5 @@ public static function getDonationId($donor_id, $total_cost, $donation_date) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['id'];
     }
+
 }

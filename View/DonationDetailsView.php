@@ -50,15 +50,22 @@ class DonationDetailsView extends ViewAbst {
         foreach($rows as $row) {
             $itemModel->getById($row['item_id']);
             $programModel->getById($itemModel->getProgramID());
+            $donationId = isset($row['donation_id']) ? $row['donation_id'] : '9';
+            $qty = isset($row['Qty']) ? $row['Qty'] : 0;
+            if (DonationModel::getByHash($donationId) != null) {
+                $j = DonationModel::getByHash($donationId);
+            } else { 
+                $j = '999';
+            }
             echo('
             <tr>
-                <td>'. DonationModel::getByHash($row['donation_id']).'</td>
-                <td>'. ItemModel::getByHash($row['item_id']).'</td>
+                <td>'.$j.'</td>
+                <td>'.ItemModel::getByHash($row['item_id']).'</td>
                 <td>'.$itemModel->getItemName().'</td>
                 <td>'.$programModel->getProgramName().'</td>
-                <td>'.$row['Qty'].'</td>
+                <td>'.$qty.'</td>
                 <td>'.$row['price'].'EGP</td>
-                <td>'.$row['Qty']*$row['price'].'EGP</td>
+                <td>'.$qty*$row['price'].'EGP</td>
             </tr>');
         }
     }
