@@ -81,15 +81,14 @@ class ItemModel extends ModifiableAbstModel implements IObserver,IItemModel{
     }
     
 
-   public static function remove($id) {
-        $sql = "DELETE FROM " . self::table . " WHERE itemid = :id";
+    public static function remove($id) {
+        $sql = "UPDATE " . self::table . " SET is_active = 0 WHERE itemid = :id";
         $stmt = Singleton::getpdo()->prepare($sql);
         return $stmt->execute(['id' => $id]);
-    } 
+    }
 
-    public static function view_all(){
-
-        $stmt = Singleton::getpdo()->query("SELECT * FROM " . self::table );
+    public static function view_all() {
+        $stmt = Singleton::getpdo()->query("SELECT * FROM " . self::table . " WHERE is_active = 1");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
