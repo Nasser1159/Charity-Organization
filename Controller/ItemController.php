@@ -1,46 +1,69 @@
 <?php
-require_once "../Model/ItemModel.php";
+require_once "../Model/ItemModelProxy.php";
 require_once "../View/ItemView.php";
 require_once "../Model/ProgramModel.php";
 
 class ItemController {
     public $itemView;
-    function __construct() {
+
+    public function __construct() {
         $this->itemView = new ItemView();
     }
+
     public function addController() {
         $program = new ProgramModel();
         $program->getnamefromid($_POST['program_id']);
-        $itemModel = new ItemModel(md5(trim($_POST['program_id'])), trim($_POST['item_name']), trim($_POST['item_cost']), trim($_POST['amount']), $program->getProgramName(), 0, $program);
-        try{
-        $this->itemView->ChangeItem($itemModel->add()); 
-            }catch(PDOException $e){
-                if ($e->getCode() == '23000') {
-                    $this->itemView->ChangeItem(0);
-                } else {
-                    echo "Error: " . $e->getMessage();
-                }
+
+        $itemProxy = new ItemModelProxy();
+        $itemModel = $itemProxy->getRealItemModel();
+        $itemModel->setProgramID(md5(trim($_POST['program_id'])));
+        $itemModel->setItemName(trim($_POST['item_name']));
+        $itemModel->setCost(trim($_POST['item_cost']));
+        $itemModel->setAmount(trim($_POST['amount']));
+        $itemModel->setProgramName($program->getProgramName());
+
+        try {
+            $this->itemView->ChangeItem($itemProxy->add());
+        } catch (PDOException $e) {
+            if ($e->getCode() == '23000') {
+                $this->itemView->ChangeItem(0);
+            } else {
+                echo "Error: " . $e->getMessage();
             }
+        }
     }
+
     public function deleteController() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->itemView->ChangeItem(ItemModel::remove($_POST['id']));    
+            $this->itemView->ChangeItem(ItemModelProxy::remove($_POST['id']));
+        } else {
+            $this->itemView->deleteRow();
         }
-        else $this->itemView->deleteRow();
     }
+
     public function view_allController() {
-        $stmt = ItemModel::view_all();
+        $itemProxy = new ItemModelProxy();
+        $stmt = $itemProxy::view_all();
         $this->itemView->ShowItemsTable($stmt);
-}
+    }
 
     public function editController() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
             $program = new ProgramModel();
             $program->getnamefromid($_POST['program_id']);
-            $itemModel = new ItemModel(md5(trim($_POST['program_id'])), trim($_POST['item_name']), trim($_POST['item_cost']), trim($_POST['amount']), $program->getProgramName());
+
+            $itemProxy = new ItemModelProxy();
+            $itemModel = $itemProxy->getRealItemModel();
+            $itemModel->setProgramID(md5(trim($_POST['program_id'])));
+            $itemModel->setItemName(trim($_POST['item_name']));
+            $itemModel->setCost(trim($_POST['item_cost']));
+            $itemModel->setAmount(trim($_POST['amount']));
+            $itemModel->setProgramName($program->getProgramName());
             $itemModel->setId($_GET['id']);
+
             try{
-            $this->itemView->ChangeItem($itemModel->edit()); 
+            $this->itemView->ChangeItem($itemProxy->edit()); 
                 }catch(PDOException $e){
                     if ($e->getCode() == '23000') {
                         $this->itemView->ChangeItem(0);
@@ -56,27 +79,21 @@ class ItemController {
             $this->itemView->EditItem($itemModel);
         }
     }
+
 }
 
 $controller = new ItemController();
-
-
 $command = $_GET['cmd'];
-$itemView = new ItemView();  
+$itemView = new ItemView();
 
 if ($command == 'viewAll') {
     $controller->view_allController();
-}
-
-else if ($command == 'edit' ) {
+} elseif ($command == 'edit') {
     $controller->editController();
-}
-
-else if ($command == 'add' && $_GET['cmd'] == $command) {
+} elseif ($command == 'add' && $_GET['cmd'] == $command) {
     $controller->addController();
-}
-
-else if ($command == 'delete')
+} elseif ($command == 'delete') {
     $controller->deleteController();
+}
 
 $controller->itemView->PrintFooter();
